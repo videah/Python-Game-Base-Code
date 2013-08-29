@@ -12,6 +12,7 @@ screen_size = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
 
 ###################################################################################################
 
+devmode = True
 
 pygame.display.init()
 pygame.font.init()
@@ -23,30 +24,34 @@ pygame.display.set_caption("Game Base")
 
 icon = pygame.Surface((1,1)); icon.set_alpha(0); pygame.display.set_icon(icon)
 
-def drawText(string, posx, posy, size, aa, shadow = None, font = None):
+font = pygame.font.SysFont('Arial',22)
 
-    if shadow is None:
-        shadow = 0
+cache={}
+def get_cache(msg, aa): #Font cache. Work in Progress.
+    
+    if not msg in cache:
         
-    if font is None:
-        font = "Arial"
-        
-    try:
-        font = pygame.font.Font(font,size)
-    except IOError:
-        try:
-            font = pygame.font.SysFont(font, size)
-        except IOError:
-            font = pygame.font.Font(None, size)
-            aa = 1
-    if shadow == 1:
-        surface.blit(font.render(string, aa,(100,100,100)), (posx + size *0.1 ,posy + size * 0.1))
-        
-    surface.blit(font.render(string, aa,(255,255,255)), (posx,posy))
+      cache[msg] = font.render(msg, aa , (255,255,255))
+
+      if devmode is True:
+          print("Added string " + msg + " to the cache.")
+      
+    return cache[msg]
+
+def drawText(string, posx, posy, aa = None):
+
+    if aa is None:
+        aa = False
+
+    msg = string
+
+    textobj=get_cache(msg, aa)
+    
+    surface.blit(textobj, (posx,posy))
 
 def framecounter(): #Display FPS.
 
-    drawText("FPS: " + str(round(float(clock.get_fps()) ) ), 0, 0, 22, 0, 1, "Silkscreen")
+    drawText("FPS: " + str(round(float(clock.get_fps()) ) ), 0, 0)
 
 def get_input():
     
@@ -58,7 +63,8 @@ def get_input():
 
 def overlay():
 
-    drawText("Game Base", 0, 22, 22, 0, 1, "Silkscreen")
+    if devmode is True:
+        drawText("Game Base", 0, 22, False)
 
 def draw():
 
@@ -73,10 +79,16 @@ def main():
     while True:
         if not get_input(): break
         draw()
-        framecounter()
+        
+        if devmode is True:
+            framecounter()
+        
         overlay()
+        
         pygame.display.flip()
         clock.tick(60)
+    if devmode is True:
+        print('Cache cleared.')
     pygame.quit()
 
         

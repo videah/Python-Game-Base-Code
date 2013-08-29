@@ -4,13 +4,13 @@ import re #Fixes stupid cx_Freeze bug.
 from pygame.locals import *
 import sys, os, traceback, random
 
-######### Used to detect screen resolution. Requires different methods on other Platforms #########
+######### Used to detect screen resolution. Will require a different method on other platforms. #########
 
 import ctypes
 user32 = ctypes.windll.user32
 screen_size = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
 
-###################################################################################################
+#########################################################################################################
 
 devmode = True
 
@@ -56,12 +56,16 @@ def framecounter(): #Display FPS.
 def get_input():
     
     for event in pygame.event.get():
+        
         if event.type == QUIT: return False
+        
         elif event.type == KEYDOWN:
+            
             if event.key == K_ESCAPE: return False
+            
     return True
 
-def overlay():
+def overlay(): #Overlay code. For HUDS, menus, etc. Is drawn after the draw function.
 
     if devmode is True:
         drawText("Game Base", 0, 22, False)
@@ -70,14 +74,17 @@ def draw():
 
     surface.fill((50,0,0))
     
-    
 
-def main():
+def main(): #Main code. Needs clearing up.
+    
     global clock
     clock = pygame.time.Clock()
+    
     random.seed()
+    
     while True:
         if not get_input(): break
+        
         draw()
         
         if devmode is True:
@@ -86,7 +93,9 @@ def main():
         overlay()
         
         pygame.display.flip()
+        
         clock.tick(60)
+        
     if devmode is True:
         print('Cache cleared.')
     pygame.quit()

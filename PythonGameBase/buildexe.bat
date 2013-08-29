@@ -1,0 +1,1 @@
+START cmd.exe /k "cd /d %~dp0 & python setup.py build"

@@ -22,7 +22,7 @@ surface = pygame.display.set_mode(screen_size,pygame.FULLSCREEN)
 
 pygame.display.set_caption("Game Base")
 
-#icon = pygame.Surface((1,1)); icon.set_alpha(0); pygame.display.set_icon(icon)
+icon = pygame.Surface((1,1)); icon.set_alpha(0); pygame.display.set_icon(icon)
 
 font = pygame.font.SysFont('Arial',22)
 
